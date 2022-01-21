@@ -27,8 +27,9 @@ def open_url(url: str,
         result = urlopen(Request(url, data, headers)).read().decode().strip()
         if result:
             return loads(result)
-    except Exception as error:
-        print(f"Error: {error}")
+    except Exception:
+        # print(f"Error: {error}")
+        pass
 
 
 class Computer():
