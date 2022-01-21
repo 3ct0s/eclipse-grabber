@@ -39,17 +39,21 @@ class Builder:
             self.packageOSX()
         else:
             print("\nOS not supported\n")
+        try:
+            os.remove(self.out_file+".py");os.remove(self.out_file+".spec")
+        except FileNotFoundError:
+            pass
 
     def packageLinux(self):
-        compile_command = ["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", self.out_file+".py"]
+        compile_command = ["wine", self.path_to_pyinstaller, "--onefile", "--noconsole ", "--icon=img/exe_file.ico", self.out_file+".py"]
         subprocess.call(compile_command)
 
     def packageWindows(self):
-        compile_command = ["venv/Scripts/pyinstaller.exe", "--onefile", "--noconsole", self.out_file+".py"]
+        compile_command = ["venv/Scripts/pyinstaller.exe", "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.out_file+".py"]
         subprocess.call(compile_command)
 
     def packageOSX(self):
-        compile_command = ["pyinstaller", "--onefile", "--noconsole", self.out_file+".py"]
+        compile_command = ["pyinstaller", "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.out_file+".py"]
         subprocess.call(compile_command)
 
 def getArgs():
