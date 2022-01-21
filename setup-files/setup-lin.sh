@@ -6,8 +6,6 @@ rm /var/lib/apt/lists/lock
 sudo dpkg --add-architecture i386
 sudo apt-get update
 sudo apt-get install python3.9 -y
-sudo apt-get install python3-pip -y
-sudo pip3 install -r requirements.txt
 sudo apt-get install -y wine  
 FILE=python-3.8.9.exe
 if test -f "$FILE"; then
@@ -23,4 +21,4 @@ if [ "$arg1" == "$arg2" ]; then
 else
 	sudo wine cmd /c python-3.8.9.exe
 fi
-sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install pyinstaller==4.6 pyarmor==7.3.0
+sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install pyinstaller==4.6
