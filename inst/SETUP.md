@@ -39,7 +39,7 @@ powershell.exe -ExecutionPolicy Bypass -Command .\setup-files\setup-win.ps1
 ### MacOS
 ```
 chmod +x ./setup-files/setup-mac.sh
-sudo ./setup-files/setup-mac.sh
+./setup-files/setup-mac.sh
 ```
 ### Linux
 ```
