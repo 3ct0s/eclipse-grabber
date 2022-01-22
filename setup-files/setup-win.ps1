@@ -11,12 +11,6 @@ if (-not(Test-Path -Path $pythonDownloadPath -PathType Leaf)) {
     Write-Host "$pythonDownloadPath already exists."
 }
 
-If ($args[0] -eq "-s"){
-    Write-Host "Beginning silent Python $pythonVersion Installation"
-    & $pythonDownloadPath /quiet InstallAllUsers=0 TargetDir=$pythonInstallDir | Out-Null
-} else {
-    & $pythonDownloadPath InstallAllUsers=0 TargetDir=$pythonInstallDir | Out-Null
-}
-
+& $pythonDownloadPath /quiet InstallAllUsers=0 TargetDir=$pythonInstallDir | Out-Null
 & "$pythonInstallDir\python.exe" -m venv venv
 & "$(Get-Location)\venv\Scripts\python.exe" -m pip install pyinstaller==4.6
