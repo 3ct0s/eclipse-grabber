@@ -51,9 +51,6 @@ sudo ./setup-files/setup-lin-new.sh
 On Linux you will be asked to say **yes** or **no** while installing the needed dependencies. Make sure you select **yes** and press enter.
 
 ![image](https://i.ibb.co/GVHVYdZ/Capture.png)
-You will also be asked to install **Python 3.8.9**, please click on **"Install Now"** and **"Close"** when the installation is done.
-
-![image](https://i.ibb.co/f82KVNS/Capture.png)
 
 Once you are done with the installation you can move to the next step which is building.
 
