@@ -56,4 +56,4 @@ Once you are done with the installation you can move to the next step which is b
 
 ## Build an Eclipse Grabber
 
-Follow the [build guide](BUILD.md) to setup {Token grabber}.
+Follow the [build guide](BUILD.md) to build an eclipse grabber.
