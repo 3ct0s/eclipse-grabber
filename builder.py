@@ -46,7 +46,7 @@ class Builder:
             pass
 
     def packageLinux(self):
-        compile_command = ["wine", self.path_to_pyinstaller, "--onefile", "--noconsole ", "--icon=img/exe_file.ico", self.out_file+".py"]
+        compile_command = ["wine", self.path_to_pyinstaller, self.out_file+".py", "--onefile", "--noconsole", "--icon=img/exe_file.ico",]
         subprocess.call(compile_command)
 
     def packageWindows(self):
