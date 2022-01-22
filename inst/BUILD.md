@@ -1,7 +1,7 @@
 # Build Guide for the Eclipse Grabber
 ## Run the builder.py Script
 
-To build an eclise grabber you will need the webhook url from the webhook that we created earlier.
+To build an eclipse grabber you will need the webhook url from the webhook that we created earlier.
 To access it, head over to your new server's settings and click on the **"Intergrations"** tab. Then click on the **"Webhooks"** tab.
 
 ![image](https://imgur.com/fEIbIfb.png)
