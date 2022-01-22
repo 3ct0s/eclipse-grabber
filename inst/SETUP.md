@@ -43,7 +43,6 @@ sudo ./setup-files/setup-mac.sh
 ```
 ### Linux
 ```
-chmod +x ./setup-files/setup-lin.sh
 sed $'s/\r$//' ./setup-files/setup-lin.sh > ./setup-files/setup-lin-new.sh
 chmod +x ./setup-files/setup-lin-new.sh
 sudo ./setup-files/setup-lin-new.sh
