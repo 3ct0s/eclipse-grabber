@@ -58,6 +58,14 @@ class Computer():
             "Discord PTB": os.path.join(ROAMING, "discordptb"),
         }
 
+        if OS == "darwin":  # OSX
+            PATHS.update({
+                "Google Chrome": os.path.join(LOCAL,
+                                              "Google",
+                                              "Chrome",
+                                              "Default")
+            })
+
         if OS == "win32":  # Windows
             PATHS.update({
                 "Google Chrome": os.path.join(LOCAL,
