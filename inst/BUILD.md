@@ -22,8 +22,8 @@ sudo python3 builder.py -w YOUR_WEBHOOK_URL -o FILE_NAME
 ```
 Make sure you replace the **YOUR_WEBHOOK_URL** with the webhook url you copied earlier and replace **FILE_NAME** with the name you want to give your executable file.
 
-Once the builder is done, you will find your generated file in the **dist** directory.
+Once the builder is done, you will find your file in the **dist** directory.
 
-## Execute the generated Eclipse Grabber
+## Execute built Eclipse Grabber
 
 Now that you have the Executable file you can share it with the target coputer and run it. You can use a file uploading service like [this](https://file.io) one to **upload/download** the file to the computer.
