@@ -20,7 +20,7 @@ sudo python3 builder.py -w YOUR_WEBHOOK_URL -o FILE_NAME
 ```
 sudo python3 builder.py -w YOUR_WEBHOOK_URL -o FILE_NAME
 ```
-Make sure you replace the **YOUR_WEBHOOK_URL** with the webhook url you copied earlier and replace **FILE_NAME** with the name you want to give your generated EXE.
+Make sure you replace the **YOUR_WEBHOOK_URL** with the webhook url you copied earlier and replace **FILE_NAME** with the name you want to give your executable file.
 
 Once the builder is done, you will find your generated file in the **dist** directory.
 
