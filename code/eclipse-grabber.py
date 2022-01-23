@@ -4,7 +4,6 @@ from platform import node as get_pc_name
 from sys import platform as OS
 from getpass import getuser
 from re import findall
-from base64 import b64decode
 from json import loads, dumps
 from typing import Optional, List
 from urllib.request import Request, urlopen
