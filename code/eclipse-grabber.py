@@ -63,7 +63,11 @@ class Computer():
                 "Google Chrome": os.path.join(LOCAL,
                                               "Google",
                                               "Chrome",
-                                              "Default")
+                                              "Default"),
+                "Yandex": os.path.join(LOCAL,
+                                       "Yandex",
+                                       "YandexBrowser",
+                                       "Default")
             })
 
         if OS == "win32":  # Windows
