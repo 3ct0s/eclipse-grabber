@@ -39,6 +39,10 @@ Like mentioned above, this tool is written in Python and can be used on Windows 
 - Gathers Billing Information from account (if available)
 - Encrypted Traffic (HTTPS)
 
+## Malware Scan (Static Analysis)
+We will occasionally scan the eclipse grabber on [antiscan.me](https://antiscan.me), here is our latest scan results:
+![image](https://i.ibb.co/6Dms7mn/eclipse-scan-result.png)
+
 ## Contributors
 For anyone who is interested in contributing to **Eclipse Grabber**, please make sure you fork the project and make a pull request.
 ## Disclaimer
