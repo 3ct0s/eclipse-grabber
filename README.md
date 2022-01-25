@@ -18,7 +18,7 @@
 
 ## What is Eclipse?
 
-Eclipse is an open source Python Discord Token Grabber that can be used on Windows and OSX systems. With this tool you can generate exectubale files that will steal Discord tokens from a system and report them to your Discord server via Discord Webhooks.
+Eclipse is an open source Python Discord Token Grabber that can be used on Windows and OSX systems. With this tool you can generate executable files that will steal Discord tokens from a system and report them to your Discord server via Discord Webhooks.
 
 ## How does it work?
 
@@ -38,6 +38,10 @@ Like mentioned above, this tool is written in Python and can be used on Windows 
 - Send infomation about Discord Account
 - Gathers Billing Information from account (if available)
 - Encrypted Traffic (HTTPS)
+
+## Malware Scan (Static Analysis)
+We will occasionally scan the eclipse grabber on [antiscan.me](https://antiscan.me), here is our latest scan results:
+![image](https://i.ibb.co/6Dms7mn/eclipse-scan-result.png)
 
 ## Contributors
 For anyone who is interested in contributing to **Eclipse Grabber**, please make sure you fork the project and make a pull request.
