@@ -47,7 +47,7 @@ def build(webhook: str, out_file: str):
     else:
         exit("\n[-] OS not supported\n")
 
-    compile_command += [out_file + ".py", "--onefile", "--noconsole", f"--icon={path.join('img','exe_file.ico')}"]
+    compile_command += [out_file + ".py", "--onefile", "--noconsole", "--hidden-import=_cffi_backend", f"--icon={path.join('img','exe_file.ico')}"]
 
     try:
         command_result = run(args=compile_command, stdout=PIPE, stderr=PIPE)
