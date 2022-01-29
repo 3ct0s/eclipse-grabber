@@ -86,7 +86,7 @@ def build(webhook: str, out_file: str, debug: bool):
     compile_command += [of, "--onefile", "--noconsole", "--hidden-import=_cffi_backend", f"--icon={path.join('img','exe_file.ico')}"]
     
     if debug:
-        compile_command.pop(3)
+        compile_command.remove("--noconsole")
         
     try:
         command_result = run(args=compile_command, stdout=PIPE, stderr=PIPE)
