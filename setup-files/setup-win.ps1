@@ -13,4 +13,4 @@ if (-not(Test-Path -Path $pythonDownloadPath -PathType Leaf)) {
 
 & $pythonDownloadPath /quiet InstallAllUsers=0 TargetDir=$pythonInstallDir | Out-Null
 & "$pythonInstallDir\python.exe" -m venv venv
-& "$(Get-Location)\venv\Scripts\python.exe" -m pip install pyinstaller==4.6 cryptography==36.0.1
+& "$(Get-Location)\venv\Scripts\python.exe" -m pip install pyinstaller==4.2 cryptography==36.0.1

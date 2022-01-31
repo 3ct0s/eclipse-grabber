@@ -15,4 +15,4 @@ else
 fi
 
 sudo wine cmd /c python-3.8.9.exe /quiet InstallAllUsers=0
-sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install pyinstaller==4.6 cryptography==36.0.1
+sudo wine "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/Python/Python38-32/python.exe" -m pip install pyinstaller==4.2 cryptography==36.0.1
